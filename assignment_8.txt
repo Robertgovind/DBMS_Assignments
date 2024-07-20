@@ -1,0 +1,77 @@
+8.	Using the tables “DEPARTMENTS” and “EMPLOYEES” above perform the following queries
+a)	Display the employee details, departments that the departments are same in both the emp and dept.
+b)	Display the employee name and Department name by implementing a left outer join.
+c)	Display the employee name and Department name by implementing a right outer join.
+d)	Display the details of those who draw the salary greater than the average salary.
+
+
+
+USE assignment06;
+Database changed
+
+mysql> SELECT e.*
+    -> FROM Emp e
+    -> JOIN Dept d ON e.deptno = d.deptno;
++-------+---------------+---------------+------+------------+---------+--------+--------+
+| empno | ename         | job           | mgr  | hiredate   | sal     | comm   | deptno |
++-------+---------------+---------------+------+------------+---------+--------+--------+
+|   101 | Rajesh Sharma | Manager       | NULL | 1993-07-21 | 6900.00 | 500.00 |     10 |
+|   102 | Sita Rai      | Clerk         |  101 | 1995-01-10 | 3000.00 | 200.00 |     10 |
+|   103 | Deepak Kumar  | Salesman      |  101 | 2000-06-15 | 3500.00 | 300.00 |     10 |
+|   104 | Kriti Thapa   | Manager       | NULL | 2000-05-12 | 6500.00 | 400.00 |     20 |
+|   105 | Anita Joshi   | Analyst       |  104 | 2002-03-09 | 4000.00 | 250.00 |     20 |
+|   106 | Ravi Kumar    | HR Executive  | NULL | 1990-09-30 | 5750.00 | 150.00 |     30 |
+|   107 | Pooja Sharma  | IT Specialist | NULL | 2015-11-22 | 7000.00 | 300.00 |     40 |
++-------+---------------+---------------+------+------------+---------+--------+--------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT e.ename AS Employee_Name, d.dname AS Department_Name
+    -> FROM Emp e
+    -> LEFT JOIN Dept d ON e.deptno = d.deptno;
++---------------+-----------------+
+| Employee_Name | Department_Name |
++---------------+-----------------+
+| Rajesh Sharma | Sales           |
+| Sita Rai      | Sales           |
+| Deepak Kumar  | Sales           |
+| Kriti Thapa   | Marketing       |
+| Anita Joshi   | Marketing       |
+| Ravi Kumar    | HR              |
+| Pooja Sharma  | IT              |
++---------------+-----------------+
+7 rows in set (0.00 sec)
+
+mysql> SELECT e.ename AS Employee_Name, d.dname AS Department_Name
+    -> FROM Emp e
+    -> RIGHT JOIN Dept d ON e.deptno = d.deptno;
++---------------+-----------------+
+| Employee_Name | Department_Name |
++---------------+-----------------+
+| Rajesh Sharma | Sales           |
+| Sita Rai      | Sales           |
+| Deepak Kumar  | Sales           |
+| Kriti Thapa   | Marketing       |
+| Anita Joshi   | Marketing       |
+| Ravi Kumar    | HR              |
+| Pooja Sharma  | IT              |
++---------------+-----------------+
+7 rows in set (0.00 sec)
+
+mysql> WITH AvgSal AS (
+    ->     SELECT AVG(sal) AS Average_Salary
+    ->     FROM Emp
+    -> )
+    -> SELECT e.*
+    -> FROM Emp e
+    -> JOIN AvgSal a ON e.sal > a.Average_Salary;
++-------+---------------+---------------+------+------------+---------+--------+--------+
+| empno | ename         | job           | mgr  | hiredate   | sal     | comm   | deptno |
++-------+---------------+---------------+------+------------+---------+--------+--------+
+|   101 | Rajesh Sharma | Manager       | NULL | 1993-07-21 | 6900.00 | 500.00 |     10 |
+|   104 | Kriti Thapa   | Manager       | NULL | 2000-05-12 | 6500.00 | 400.00 |     20 |
+|   106 | Ravi Kumar    | HR Executive  | NULL | 1990-09-30 | 5750.00 | 150.00 |     30 |
+|   107 | Pooja Sharma  | IT Specialist | NULL | 2015-11-22 | 7000.00 | 300.00 |     40 |
++-------+---------------+---------------+------+------------+---------+--------+--------+
+4 rows in set (0.00 sec)
+
+mysql>
