@@ -1,0 +1,108 @@
+4.(Exercise on the group by and order by clauses) Create Sales table with the following fields (Sales No, Salesname, Branch, Salesamount, DOB)
+ 1.Create a Sales Table with the following fields (Sales_No,Sales_Name,Branch,Sales_Amount,DOB)
+ 2.Insert five records
+ 3.Calculate total salesamount in each branch
+ 4.Calculate average salesamount in each branch
+ 5.Display all the salesmen, DOB who are born in the month of December as day in character format i.e. 21-Dec-09
+ 6.Display the name and DOB of salesman in alphabetical order of the month.
+
+
+
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.37 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ass1               |
+| db                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| wrc                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use ass1;
+Database changed
+
+mysql> CREATE TABLE Sales (
+    ->     Sales_No INT PRIMARY KEY,
+    ->     Sales_Name VARCHAR(100),
+    ->     Branch VARCHAR(50),
+    ->     Sales_Amount DECIMAL(10, 2),
+    ->     DOB DATE
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO Sales (Sales_No, Sales_Name, Branch, Sales_Amount, DOB)
+    -> VALUES
+    -> (1, 'Raj Kumar', 'Kathmandu', 120000.00, '1985-12-10'),
+    -> (2, 'Sita Rathi', 'Pokhara', 80000.00, '1990-12-22'),
+    -> (3, 'Anil Sharma', 'Kathmandu', 150000.00, '1982-05-15'),
+    -> (4, 'Maya Devi', 'Biratnagar', 90000.00, '1988-12-30'),
+    -> (5, 'Hari Prasad', 'Pokhara', 110000.00, '1995-03-08');
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT Branch, SUM(Sales_Amount) AS Total_Sales_Amount
+    -> FROM Sales
+    -> GROUP BY Branch;
++------------+--------------------+
+| Branch     | Total_Sales_Amount |
++------------+--------------------+
+| Kathmandu  |          270000.00 |
+| Pokhara    |          190000.00 |
+| Biratnagar |           90000.00 |
++------------+--------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Branch, AVG(Sales_Amount) AS Average_Sales_Amount
+    -> FROM Sales
+    -> GROUP BY Branch;
++------------+----------------------+
+| Branch     | Average_Sales_Amount |
++------------+----------------------+
+| Kathmandu  |        135000.000000 |
+| Pokhara    |         95000.000000 |
+| Biratnagar |         90000.000000 |
++------------+----------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM sales;
++----------+-------------+------------+--------------+------------+
+| Sales_No | Sales_Name  | Branch     | Sales_Amount | DOB        |
++----------+-------------+------------+--------------+------------+
+|        1 | Raj Kumar   | Kathmandu  |    120000.00 | 1985-12-10 |
+|        2 | Sita Rathi  | Pokhara    |     80000.00 | 1990-12-22 |
+|        3 | Anil Sharma | Kathmandu  |    150000.00 | 1982-05-15 |
+|        4 | Maya Devi   | Biratnagar |     90000.00 | 1988-12-30 |
+|        5 | Hari Prasad | Pokhara    |    110000.00 | 1995-03-08 |
++----------+-------------+------------+--------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select sales_name,DOB from sales order by extract(month from DOB);
++-------------+------------+
+| sales_name  | DOB        |
++-------------+------------+
+| Hari Prasad | 1995-03-08 |
+| Anil Sharma | 1982-05-15 |
+| Raj Kumar   | 1985-12-10 |
+| Sita Rathi  | 1990-12-22 |
+| Maya Devi   | 1988-12-30 |
++-------------+------------+
+5 rows in set (0.00 sec)
+
+mysql>
