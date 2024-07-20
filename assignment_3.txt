@@ -1,0 +1,148 @@
+3.Commands of Rollback and Commit : Create Teacher table with the following fields (Name, DeptNo, Date of joining, DeptName, Location, Salary)
+ 1.Create Teacher table with the following fields (Id,Name, DeptNo, Date of joining, DeptName, Location, Salary)
+ 2.Insert five records
+ 3.Give Increment of 25% salary for Mathematics Department.
+ 4.Perform Rollback command
+ 5.Give Increment of 15% salary for Commerce Department
+ 6.Perform commit command
+
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.37 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ass1               |
+| db                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| wrc                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use ass1;
+Database changed
+
+mysql> CREATE TABLE Teacher (
+    ->     Id INT PRIMARY KEY,
+    ->     Name VARCHAR(100),
+    ->     DeptNo INT,
+    ->     Date_of_joining DATE,
+    ->     DeptName VARCHAR(50),
+    ->     Location VARCHAR(100),
+    ->     Salary DECIMAL(10, 2)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_ass1 |
++----------------+
+| client12       |
+| client_master  |
+| employee       |
+| teacher        |
++----------------+
+4 rows in set (0.00 sec)
+
+mysql> drop table client12;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_ass1 |
++----------------+
+| client_master  |
+| employee       |
+| teacher        |
++----------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Teacher (Id, Name, DeptNo, Date_of_joining, DeptName, Location, Salary)
+    -> VALUES
+    -> (1, 'Suman Sharma', 101, '2020-06-15', 'Mathematics', 'Kathmandu', 50000.00),
+    -> (2, 'Maya Rai', 102, '2019-08-22', 'Commerce', 'Pokhara', 45000.00),
+    -> (3, 'Anil Kumar', 103, '2018-11-10', 'Science', 'Biratnagar', 55000.00),
+    -> (4, 'Priya Joshi', 104, '2021-01-12', 'Mathematics', 'Lalitpur', 48000.00),
+    -> (5, 'Rajesh Thapa', 105, '2017-03-05', 'Commerce', 'Bharatpur', 47000.00);
+Query OK, 5 rows affected (0.00 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from teacher;
++----+--------------+--------+-----------------+-------------+------------+----------+
+| Id | Name         | DeptNo | Date_of_joining | DeptName    | Location   | Salary   |
++----+--------------+--------+-----------------+-------------+------------+----------+
+|  1 | Suman Sharma |    101 | 2020-06-15      | Mathematics | Kathmandu  | 50000.00 |
+|  2 | Maya Rai     |    102 | 2019-08-22      | Commerce    | Pokhara    | 45000.00 |
+|  3 | Anil Kumar   |    103 | 2018-11-10      | Science     | Biratnagar | 55000.00 |
+|  4 | Priya Joshi  |    104 | 2021-01-12      | Mathematics | Lalitpur   | 48000.00 |
+|  5 | Rajesh Thapa |    105 | 2017-03-05      | Commerce    | Bharatpur  | 47000.00 |
++----+--------------+--------+-----------------+-------------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> UPDATE Teacher
+    -> SET Salary = Salary * 1.25
+    -> WHERE DeptName = 'Mathematics';
+Query OK, 2 rows affected (0.00 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from teacher;
++----+--------------+--------+-----------------+-------------+------------+----------+
+| Id | Name         | DeptNo | Date_of_joining | DeptName    | Location   | Salary   |
++----+--------------+--------+-----------------+-------------+------------+----------+
+|  1 | Suman Sharma |    101 | 2020-06-15      | Mathematics | Kathmandu  | 62500.00 |
+|  2 | Maya Rai     |    102 | 2019-08-22      | Commerce    | Pokhara    | 45000.00 |
+|  3 | Anil Kumar   |    103 | 2018-11-10      | Science     | Biratnagar | 55000.00 |
+|  4 | Priya Joshi  |    104 | 2021-01-12      | Mathematics | Lalitpur   | 60000.00 |
+|  5 | Rajesh Thapa |    105 | 2017-03-05      | Commerce    | Bharatpur  | 47000.00 |
++----+--------------+--------+-----------------+-------------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> ROLLBACK;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select * from teacher;
++----+--------------+--------+-----------------+-------------+------------+----------+
+| Id | Name         | DeptNo | Date_of_joining | DeptName    | Location   | Salary   |
++----+--------------+--------+-----------------+-------------+------------+----------+
+|  1 | Suman Sharma |    101 | 2020-06-15      | Mathematics | Kathmandu  | 62500.00 |
+|  2 | Maya Rai     |    102 | 2019-08-22      | Commerce    | Pokhara    | 45000.00 |
+|  3 | Anil Kumar   |    103 | 2018-11-10      | Science     | Biratnagar | 55000.00 |
+|  4 | Priya Joshi  |    104 | 2021-01-12      | Mathematics | Lalitpur   | 60000.00 |
+|  5 | Rajesh Thapa |    105 | 2017-03-05      | Commerce    | Bharatpur  | 47000.00 |
++----+--------------+--------+-----------------+-------------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> UPDATE Teacher
+    -> SET Salary = Salary * 1.15
+    -> WHERE DeptName = 'Commerce';
+Query OK, 2 rows affected (0.00 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> SELECT * FROM teacher;
++----+--------------+--------+-----------------+-------------+------------+----------+
+| Id | Name         | DeptNo | Date_of_joining | DeptName    | Location   | Salary   |
++----+--------------+--------+-----------------+-------------+------------+----------+
+|  1 | Suman Sharma |    101 | 2020-06-15      | Mathematics | Kathmandu  | 62500.00 |
+|  2 | Maya Rai     |    102 | 2019-08-22      | Commerce    | Pokhara    | 51750.00 |
+|  3 | Anil Kumar   |    103 | 2018-11-10      | Science     | Biratnagar | 55000.00 |
+|  4 | Priya Joshi  |    104 | 2021-01-12      | Mathematics | Lalitpur   | 60000.00 |
+|  5 | Rajesh Thapa |    105 | 2017-03-05      | Commerce    | Bharatpur  | 54050.00 |
++----+--------------+--------+-----------------+-------------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> COMMIT;
+Query OK, 0 rows affected (0.00 sec)
