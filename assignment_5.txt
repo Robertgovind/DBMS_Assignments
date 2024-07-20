@@ -1,0 +1,169 @@
+5.Create an Emp table with the following fields: (EmpNo, EmpName, Job,Basic, DA, HRA,PF, GrossPay, NetPay)
+ 1.create an employee table with the following fields: (Emp_No,Emp_ Name, Designation, basic, DA, HRA, PF, Gross pay, Net pay)
+ 2.Insert Five Records and calculate GrossPay and NetPay.
+ 3.Adding column to table and Updating Attributes DA
+ 4.Adding column to table and Updating Attributes HRA
+ 5.Adding column to table and Updating Attributes PF
+ 6.Adding column to table and Updating Attributes Gross Pay
+ 7.Adding column to table and Updating Attributes Net Pay
+ 8.Display the employee table
+ 9.Display the employees whose Basic is lowest in each department.
+ 10.If NetPay is less than Rs. 10,000 add Rs. 1200 as special allowance
+ 11.Display the employees whose GrossPay lies between 10,000 & 20,000
+ 12.Display all the employees who earn maximum salary.
+
+
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.37 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ass1               |
+| db                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| wrc                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use ass1;
+Database changed
+
+
+# Create the 'Emp' table
+CREATE TABLE Emp (
+    Emp_No VARCHAR(10) PRIMARY KEY,
+    Emp_Name VARCHAR(100),
+    Designation VARCHAR(50),
+    Basic DECIMAL(10, 2),
+    DA DECIMAL(10, 2),
+    HRA DECIMAL(10, 2),
+    PF DECIMAL(10, 2),
+    Gross_Pay DECIMAL(10, 2),
+    Net_Pay DECIMAL(10, 2)
+);
+Query OK, 0 rows affected (0.06 sec)
+
+# Insert data into 'Emp'
+INSERT INTO Emp (Emp_No, Emp_Name, Designation, Basic, DA, HRA, PF) VALUES
+('E001', 'John Doe', 'Manager', 25000.00, 10, 5, 5),
+('E002', 'Jane Smith', 'Engineer', 18000.00, 8, 4, 3),
+('E003', 'Michael Johnson', 'Analyst', 20000.00, 8, 4, 4),
+('E004', 'Emily Davis', 'Developer', 22000.00, 9, 4.5, 4),
+('E005', 'David Brown', 'Tester', 15000.00, 7, 3.5, 2);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+# Update 'Emp' table to calculate Gross_Pay and Net_Pay
+UPDATE Emp
+SET Gross_Pay = Basic + DA + HRA,
+    Net_Pay = Basic + DA + HRA - PF;
+Query OK, 5 rows affected (0.02 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+# Attempt to alter 'Emp' table
+ALTER TABLE Emp
+ADD COLUMN DA DECIMAL(10, 2),
+ADD COLUMN HRA DECIMAL(10, 2),
+ADD COLUMN PF DECIMAL(10, 2),
+ADD COLUMN Gross_Pay DECIMAL(10, 2),
+ADD COLUMN Net_Pay DECIMAL(10, 2);
+ERROR 1060 (42S21): Duplicate column name 'DA'
+
+# Update 'Emp' table to set DA, HRA, and PF values
+UPDATE Emp
+SET DA = 10, HRA = 5, PF = 5;
+Query OK, 4 rows affected (0.02 sec)
+Rows matched: 5  Changed: 4  Warnings: 0
+
+# Update 'Emp' table to recalculate Gross_Pay and Net_Pay
+UPDATE Emp
+SET Gross_Pay = Basic + DA + HRA,
+    Net_Pay = Basic + DA + HRA - PF;
+Query OK, 4 rows affected (0.02 sec)
+Rows matched: 5  Changed: 4  Warnings: 0
+
+# Select all data from 'Emp' table
+SELECT * FROM Emp;
++--------+-----------------+-------------+----------+-------+------+------+-----------+----------+
+| Emp_No | Emp_Name        | Designation | Basic    | DA    | HRA  | PF   | Gross_Pay | Net_Pay  |
++--------+-----------------+-------------+----------+-------+------+------+-----------+----------+
+| E001   | John Doe        | Manager     | 25000.00 | 10.00 | 5.00 | 5.00 |  25015.00 | 25010.00 |
+| E002   | Jane Smith      | Engineer    | 18000.00 | 10.00 | 5.00 | 5.00 |  18015.00 | 18010.00 |
+| E003   | Michael Johnson | Analyst     | 20000.00 | 10.00 | 5.00 | 5.00 |  20015.00 | 20010.00 |
+| E004   | Emily Davis     | Developer   | 22000.00 | 10.00 | 5.00 | 5.00 |  22015.00 | 22010.00 |
+| E005   | David Brown     | Tester      | 15000.00 | 10.00 | 5.00 | 5.00 |  15015.00 | 15010.00 |
++--------+-----------------+-------------+----------+-------+------+------+-----------+----------+
+5 rows in set (0.01 sec)
+
+# Select employees with minimum Basic salary in each designation
+SELECT Emp_No, Emp_Name, Designation, Basic
+FROM Emp e1
+WHERE Basic = (SELECT MIN(Basic) FROM Emp e2 WHERE e1.Designation = e2.Designation);
++--------+-----------------+-------------+----------+
+| Emp_No | Emp_Name        | Designation | Basic    |
++--------+-----------------+-------------+----------+
+| E001   | John Doe        | Manager     | 25000.00 |
+| E002   | Jane Smith      | Engineer    | 18000.00 |
+| E003   | Michael Johnson | Analyst     | 20000.00 |
+| E004   | Emily Davis     | Developer   | 22000.00 |
+| E005   | David Brown     | Tester      | 15000.00 |
++--------+-----------------+-------------+----------+
+5 rows in set (0.01 sec)
+
+# Update 'Emp' table to increase Net_Pay for employees with Net_Pay less than 10000
+UPDATE Emp
+SET Net_Pay = Net_Pay + 1200
+WHERE Net_Pay < 10000;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+# Select employees with Gross_Pay between 10000 and 20000
+SELECT Emp_No, Emp_Name, Designation, Gross_Pay FROM Emp WHERE Gross_Pay BETWEEN 10000 AND 20000;
++--------+-------------+-------------+-----------+
+| Emp_No | Emp_Name    | Designation | Gross_Pay |
++--------+-------------+-------------+-----------+
+| E002   | Jane Smith  | Engineer    |  18015.00 |
+| E005   | David Brown | Tester      |  15015.00 |
++--------+-------------+-------------+-----------+
+2 rows in set (0.01 sec)
+
+# Select employee with maximum Gross_Pay
+SELECT Emp_No, Emp_Name, Designation, Gross_Pay FROM Emp WHERE Gross_Pay = (SELECT MAX(Gross_Pay) FROM Emp);
++--------+----------+-------------+-----------+
+| Emp_No | Emp_Name | Designation | Gross_Pay |
++--------+----------+-------------+-----------+
+| E001   | John Doe | Manager     |  25015.00 |
++--------+----------+-------------+-----------+
+1 row in set (0.00 sec)
+
+# Describe the 'Emp' table
+DESC Emp;
++-------------+---------------+------+-----+---------+-------+
+| Field       | Type          | Null | Key | Default | Extra |
++-------------+---------------+------+-----+---------+-------+
+| Emp_No      | varchar(10)   | NO   | PRI | NULL    |       |
+| Emp_Name    | varchar(100)  | YES  |     | NULL    |       |
+| Designation | varchar(50)   | YES  |     | NULL    |       |
+| Basic       | decimal(10,2) | YES  |     | NULL    |       |
+| DA          | decimal(10,2) | YES  |     | NULL    |       |
+| HRA         | decimal(10,2) | YES  |     | NULL    |       |
+| PF          | decimal(10,2) | YES  |     | NULL    |       |
+| Gross_Pay   | decimal(10,2) | YES  |     | NULL    |       |
+| Net_Pay     | decimal(10,2) | YES  |     | NULL    |       |
++-------------+---------------+------+-----+---------+-------+
+9 rows in set (0.00 sec)
