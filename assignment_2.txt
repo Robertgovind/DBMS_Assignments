@@ -1,0 +1,103 @@
+2.	(Exercise: update the records in the table) Create Client_master with the following fields (ClientNO, Name, Address, City, State, bal_due)
+1.	create a client master table with attributes
+2.	insert five records into the Client_Master
+3.	Display Client Master Table
+4.	Find the name of Clients whose balance_due >5000
+5.	Change the bal_due of ClientNO “C123” to Rs. 5100
+6.	Change the name of Client_master to Client12
+7.	Display the bal_due heading as “BALANCE” Client master table
+
+
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.37 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ass1               |
+| db                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| wrc                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use ass1;
+Database changed
+mysql> CREATE TABLE Client_master (
+    ->     ClientNO VARCHAR(10) PRIMARY KEY,
+    ->     Name VARCHAR(100),
+    ->     Address VARCHAR(255),
+    ->     City VARCHAR(50),
+    ->     State VARCHAR(50),
+    ->     bal_due DECIMAL(10, 2)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO Client_master (ClientNO, Name, Address, City, State, bal_due)
+    -> VALUES
+    -> ('C101', 'Hari Sharma', '12/3, Thapathali', 'Kathmandu', 'Bagmati', 4500.00),
+    -> ('C102', 'Sita Rathi', '45, New Road', 'Pokhara', 'Gandaki', 6000.00),
+    -> ('C103', 'Rajesh Bhattarai', '78, Bharatpur', 'Chitwan', 'Bagmati', 3000.00),
+    -> ('C104', 'Gita Adhikari', '56, Biratnagar', 'Morang', 'Koshi', 7500.00),
+    -> ('C105', 'Amit Koirala', '89, Butwal', 'Lumbini', 'Lumbini', 4200.00);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Client_master;
++----------+------------------+------------------+-----------+---------+---------+
+| ClientNO | Name             | Address          | City      | State   | bal_due |
++----------+------------------+------------------+-----------+---------+---------+
+| C101     | Hari Sharma      | 12/3, Thapathali | Kathmandu | Bagmati | 4500.00 |
+| C102     | Sita Rathi       | 45, New Road     | Pokhara   | Gandaki | 6000.00 |
+| C103     | Rajesh Bhattarai | 78, Bharatpur    | Chitwan   | Bagmati | 3000.00 |
+| C104     | Gita Adhikari    | 56, Biratnagar   | Morang    | Koshi   | 7500.00 |
+| C105     | Amit Koirala     | 89, Butwal       | Lumbini   | Lumbini | 4200.00 |
++----------+------------------+------------------+-----------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT name FROM client_master WHERE bal_due > 5000;
++---------------+
+| name          |
++---------------+
+| Sita Rathi    |
+| Gita Adhikari |
++---------------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE Client_master
+    -> SET bal_due = 5100.00
+    -> WHERE ClientNO = 'C123';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> ALTER TABLE Client_master
+    -> RENAME TO Client12;
+ERROR 1050 (42S01): Table 'client12' already exists
+mysql> SELECT ClientNO, Name, Address, City, State, bal_due AS BALANCE
+    -> FROM Client12;
++----------+---------------+----------------+-------------+-------+---------+
+| ClientNO | Name          | Address        | City        | State | BALANCE |
++----------+---------------+----------------+-------------+-------+---------+
+| C101     | Alice Johnson | 123 Elm Street | Springfield | IL    | 4500.00 |
+| C102     | Bob Smith     | 456 Oak Avenue | Mapleton    | CA    | 6000.00 |
+| C103     | Carol Davis   | 789 Pine Road  | Shelbyville | TX    | 3000.00 |
+| C104     | David Wilson  | 101 Maple Lane | Greenville  | NC    | 7500.00 |
+| C105     | Eva Martinez  | 202 Birch Blvd | Hometown    | FL    | 4200.00 |
++----------+---------------+----------------+-------------+-------+---------+
+5 rows in set (0.01 sec)
+
+mysql>
