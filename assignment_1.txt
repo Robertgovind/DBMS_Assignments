@@ -1,0 +1,128 @@
+1.	(Exercise: retrieve the records from the table) EMPLOYEES (Employee_Id, First_Name, Last_Name, Email, Phone_Number, Hire_Date, Job_Id, Salary, Commission_Pct, Manager_Id, Department_Id)
+1.	create an employee’s table with the following fields: (Emp_id, First_name, Last_name, Phone_No,Hire_date,Job_id,Emp_Salary,Comission_Pct,manager _id,Department_id)    Ans ->
+
+Enter password: **********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.37 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| ass1               |
+| db                 |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
+| wrc                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use ass1;
+Database changed
+mysql> CREATE TABLE employee (
+    ->     emp_id INT PRIMARY KEY,
+    ->     first_name VARCHAR(50),
+    ->     last_name VARCHAR(50),
+    ->     phone_no VARCHAR(15),
+    ->     hire_date DATE,
+    ->     job_id VARCHAR(10),
+    ->     emp_salary DECIMAL(10, 2),
+    ->     commission_pct DECIMAL(5, 2),
+    ->     manager_id INT,
+    ->     department_id INT
+    -> );
+Query OK, 0 rows affected (0.06 sec)                        
+2.	Insert five records into the table employees
+Ans ->
+mysql> INSERT INTO employee(emp_id, first_name,last_name,phone_no, hire_date,job_id,emp_salary,commission_pct, manager_id,department_id) VALUES
+    -> (1, 'Govind','Yadav','222-111','2024-03-09','AppDev',50000,10.0,1515,1),
+    -> (2, 'Dhiraj','Chaurasiya','222-101','2024-05-09','WebDev',60000,11.0,1516,2),
+    -> (3, 'Utkarsha','Gupta','222-121','2024-05-18','Design',40000,15.0,1011,3),
+    -> (4, 'Prabin','Thapa','222-333','2024-05-15','ML',90000,16.0,1033,4),
+    -> (5, 'Anil','Paudel','222-991','2024-01-09','DBA',50000,12.0,5586,5);
+Query OK, 5 rows affected (0.02 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+3.	Display the table Employees
+Ans ->
+mysql> select * from employee;
++--------+------------+------------+----------+------------+--------+------------+----------------+------------+---------------+
+| emp_id | first_name | last_name  | phone_no | hire_date  | job_id | emp_salary | commission_pct | manager_id | department_id |
++--------+------------+------------+----------+------------+--------+------------+----------------+------------+---------------+
+|      1 | Govind     | Yadav      | 222-111  | 2024-03-09 | AppDev |   50000.00 |          10.00 |       1515 |             1 |
+|      2 | Dhiraj     | Chaurasiya | 222-101  | 2024-05-09 | WebDev |   60000.00 |          11.00 |       1516 |             2 |
+|      3 | Utkarsha   | Gupta      | 222-121  | 2024-05-18 | Design |   40000.00 |          15.00 |       1011 |             3 |
+|      4 | Prabin     | Thapa      | 222-333  | 2024-05-15 | ML     |   90000.00 |          16.00 |       1033 |             4 |
+|      5 | Anil       | Paudel     | 222-991  | 2024-01-09 | DBA    |   50000.00 |          12.00 |       5586 |             5 |
++--------+------------+------------+----------+------------+--------+------------+----------------+------------+---------------+
+5 rows in set (0.00 sec)
+4.	Find out the employee id, names, salaries of all the employees
+Ans ->
+SELECT emp_id, first_name,last_name,emp_salary FROM employee;
++--------+------------+------------+------------+
+| emp_id | first_name | last_name  | emp_salary |
++--------+------------+------------+------------+
+|      1 | Govind     | Yadav      |   50000.00 |
+|      2 | Dhiraj     | Chaurasiya |   60000.00 |
+|      3 | Utkarsha   | Gupta      |   40000.00 |
+|      4 | Prabin     | Thapa      |   90000.00 |
+|      5 | Anil       | Paudel     |   50000.00 |
++--------+------------+------------+------------+
+5 rows in set (0.00 sec)
+5.	Find the names of the employees who have a salary greater than or equal to 4800
+Ans ->
+mysql> select first_name,last_name from employee where emp_salary >= 48000;
++------------+------------+
+| first_name | last_name  |
++------------+------------+
+| Govind     | Yadav      |
+| Dhiraj     | Chaurasiya |
+| Prabin     | Thapa      |
+| Anil       | Paudel     |
++------------+------------+
+4 rows in set (0.00 sec)
+6.	List out the employees whose last name is ‘Yadav’
+Ans ->
+mysql> select * from employee where last_name = 'Yadav';
++--------+------------+-----------+----------+------------+--------+------------+----------------+------------+---------------+
+| emp_id | first_name | last_name | phone_no | hire_date  | job_id | emp_salary | commission_pct | manager_id | department_id |
++--------+------------+-----------+----------+------------+--------+------------+----------------+------------+---------------+
+|      1 | Govind     | Yadav     | 222-111  | 2024-03-09 | AppDev |   50000.00 |          10.00 |       1515 |             1 |
++--------+------------+-----------+----------+------------+--------+------------+----------------+------------+---------------+
+1 row in set (0.00 sec)
+7.	Find the names of the employees who works in departments 2, 3 and 4
+Ans ->
+mysql> select first_name, last_name, emp_salary from employee where departme
+nt_id in (2,3,4);
++------------+------------+------------+
+| first_name | last_name  | emp_salary |
++------------+------------+------------+
+| Dhiraj     | Chaurasiya |   60000.00 |
+| Utkarsha   | Gupta      |   40000.00 |
+| Prabin     | Thapa      |   90000.00 |
++------------+------------+------------+
+3 rows in set (0.00 sec)
+8.	Display the unique Manager_Id from employees table
+Ans ->
+mysql> select distinct manager_id from employee;
++------------+
+| manager_id |
++------------+
+|       1515 |
+|       1516 |
+|       1011 |
+|       1033 |
+|       5586 |
++------------+
+5 rows in set (0.01 sec)
