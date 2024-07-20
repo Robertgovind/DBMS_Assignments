@@ -1,0 +1,129 @@
+6.Employee Database an Enterprise wishes to maintain a database to automate its operations. Enterprise is divided into certain departments and each department consists of employees.  The        following two tables describes the automation schemas Dept (deptno, dname, loc) Emp (empno, ename, job, mgr, hiredate, sal, comm, deptno)
+ 1.Create Dept table: Dept (deptno, dname, loc)
+ 2.Create Dept table: Emp (empno, ename, job, mgr, hiredate, sal, comm, deptno)
+ 3.Insert data int Dept and Emp tables
+ 4.Update the employee salary by 15%, whose experience is greater than 30 years
+ 5.Delete the employees, who completed 30 years of service.
+ 6.Display the manager who is having maximum number of employees working under him?
+ 7.Create a view, which contain employee names and their manager
+
+
+CREATE DATABASE assignment06;
+Query OK, 1 row affected (0.04 sec)
+
+# Use the 'assignment06' database
+USE assignment06;
+Database changed
+
+# Create the 'Dept' table
+CREATE TABLE Dept (
+    deptno INT PRIMARY KEY,
+    dname VARCHAR(50),
+    loc VARCHAR(50)
+);
+Query OK, 0 rows affected (0.08 sec)
+
+# Create the 'Emp' table
+CREATE TABLE Emp (
+    empno INT PRIMARY KEY,
+    ename VARCHAR(50),
+    job VARCHAR(50),
+    mgr INT,
+    hiredate DATE,
+    sal DECIMAL(10, 2),
+    comm DECIMAL(10, 2),
+    deptno INT,
+    FOREIGN KEY (deptno) REFERENCES Dept(deptno),
+    FOREIGN KEY (mgr) REFERENCES Emp(empno)
+);
+Query OK, 0 rows affected (0.10 sec)
+
+# Insert data into 'Dept'
+INSERT INTO Dept (deptno, dname, loc) VALUES
+(10, 'Accounting', 'New York'),
+(20, 'Research', 'Dallas'),
+(30, 'Sales', 'Chicago'),
+(40, 'Operations', 'Boston');
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+# Insert data into 'Emp'
+INSERT INTO Emp (empno, ename, job, mgr, hiredate, sal, comm, deptno) VALUES
+(7369, 'SMITH', 'CLERK', 7902, '1980-12-17', 800.00, NULL, 20),
+(7499, 'ALLEN', 'SALESMAN', 7698, '1981-02-20', 1600.00, 300.00, 30),
+(7521, 'WARD', 'SALESMAN', 7698, '1981-02-22', 1250.00, 500.00, 30),
+(7566, 'JONES', 'MANAGER', 7839, '1981-04-02', 2975.00, NULL, 20),
+(7698, 'BLAKE', 'MANAGER', 7839, '1981-05-01', 2850.00, NULL, 30),
+(7782, 'CLARK', 'MANAGER', 7839, '1981-06-09', 2450.00, NULL, 10),
+(7788, 'SCOTT', 'ANALYST', 7566, '1982-12-09', 3000.00, NULL, 20),
+(7839, 'KING', 'PRESIDENT', NULL, '1981-11-17', 5000.00, NULL, 10),
+(7844, 'TURNER', 'SALESMAN', 7698, '1981-09-08', 1500.00, NULL, 30),
+(7900, 'JAMES', 'CLERK', 7698, '1981-12-03', 950.00, NULL, 30),
+(7902, 'FORD', 'ANALYST', 7566, '1981-12-03', 3000.00, NULL, 20),
+(7934, 'dhiru', 'CLERK', 7782, '1982-01-23', 1300.00, NULL, 10);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`assignment06`.`emp`, CONSTRAINT `emp_ibfk_2` FOREIGN KEY (`mgr`) REFERENCES `emp` (`empno`))
+
+# Insert data into 'Emp'
+mysql> INSERT INTO Emp (empno, ename, job, mgr, hiredate, sal, comm, deptno) VALUES
+    -> (101, 'Rajesh Sharma', 'Manager', NULL, '1993-07-21', 6000.00, 500.00, 10),
+    -> (102, 'Sita Rai', 'Clerk', 101, '1995-01-10', 3000.00, 200.00, 10),
+    -> (103, 'Deepak Kumar', 'Salesman', 101, '2000-06-15', 3500.00, 300.00, 10),
+    -> (104, 'Kriti Thapa', 'Manager', NULL, '2000-05-12', 6500.00, 400.00, 20),
+    -> (105, 'Anita Joshi', 'Analyst', 104, '2002-03-09', 4000.00, 250.00, 20),
+    -> (106, 'Ravi Kumar', 'HR Executive', NULL, '1990-09-30', 5000.00, 150.00, 30),
+    -> (107, 'Pooja Sharma', 'IT Specialist', NULL, '2015-11-22', 7000.00, 300.00, 40);
+
+# update
+mysql> UPDATE Emp
+    -> SET sal = sal * 1.15
+    -> WHERE DATEDIFF(CURDATE(), hiredate) / 365 > 30;
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> DELETE FROM Emp
+WHERE DATEDIFF(CURDATE(), hiredate) / 365 > 30;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`Assignment`.`Emp`, CONSTRAINT `Emp_ibfk_2` FOREIGN KEY (`mgr`) REFERENCES `Emp` (`empno`))
+
+mysql> SELECT mgr, COUNT(*) AS num_employees
+    -> FROM Emp
+    -> GROUP BY mgr
+    -> ORDER BY num_employees DESC
+    -> LIMIT 1;
++------+---------------+
+| mgr  | num_employees |
++------+---------------+
+| NULL |             4 |
++------+---------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE VIEW EmployeeManager AS
+    -> SELECT e1.ename AS Employee_Name, e2.ename AS Manager_Name
+    -> FROM Emp e1
+    -> LEFT JOIN Emp e2 ON e1.mgr = e2.empno;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> SELECT *
+    -> FROM Emp;
++-------+---------------+---------------+------+------------+---------+--------+--------+
+| empno | ename         | job           | mgr  | hiredate   | sal     | comm   | deptno |
++-------+---------------+---------------+------+------------+---------+--------+--------+
+|   101 | Rajesh Sharma | Manager       | NULL | 1993-07-21 | 6900.00 | 500.00 |     10 |
+|   102 | Sita Rai      | Clerk         |  101 | 1995-01-10 | 3000.00 | 200.00 |     10 |
+|   103 | Deepak Kumar  | Salesman      |  101 | 2000-06-15 | 3500.00 | 300.00 |     10 |
+|   104 | Kriti Thapa   | Manager       | NULL | 2000-05-12 | 6500.00 | 400.00 |     20 |
+|   105 | Anita Joshi   | Analyst       |  104 | 2002-03-09 | 4000.00 | 250.00 |     20 |
+|   106 | Ravi Kumar    | HR Executive  | NULL | 1990-09-30 | 5750.00 | 150.00 |     30 |
+|   107 | Pooja Sharma  | IT Specialist | NULL | 2015-11-22 | 7000.00 | 300.00 |     40 |
++-------+---------------+---------------+------+------------+---------+--------+--------+
+7 rows in set (0.01 sec)
+
+mysql> SELECT * FROM Dept;
++--------+-----------+---------------+
+| deptno | dname     | loc           |
++--------+-----------+---------------+
+|     10 | Sales     | New York      |
+|     20 | Marketing | Los Angeles   |
+|     30 | HR        | Chicago       |
+|     40 | IT        | San Francisco |
++--------+-----------+---------------+
+4 rows in set (0.00 sec)
